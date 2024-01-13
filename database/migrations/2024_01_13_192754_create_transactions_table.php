@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users','id');
+            $table->foreignId('order_id')->constrained('orders','id');
+            $table->foreignId('type')->constrained('transactions_types');
+            $table->unsignedBigInteger('fromable_account_id');
+            $table->string('fromable_account_type');
+            $table->decimal('fromable_account_balance');
+            $table->unsignedBigInteger('toable_account_id');
+            $table->string('toable_account_type');
+            $table->decimal('toable_account_balance');
+            $table->decimal('amount',8,2);
             $table->timestamps();
         });
     }
