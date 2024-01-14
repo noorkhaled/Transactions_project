@@ -1,66 +1,434 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# API Documentation
+### Our API documentation provides comprehensive information on Users and Transactions Models, empowering developers to seamlessly integrate our platform into their applications. Explore our API endpoints."
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+<details><summary> <h1>Users</h1> 
+This API is for managing and creating users</summary> 
 
-## About Laravel
+### Base Url:
+ ```”http://localhost:8000/api”```
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+#
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<details><summary><h2>GET</h2><h3>/users</h3>"Retrieve all users"</summary>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```
+GET http://localhost:8000/api/users  
+```
+### Params : None
+### Success Response
+1.Code:
+```
+201 OK
+```
+2.Content
+```
+{ 
+  "success": true,
+  "users": [
+        {
+            "id": 1,
+            "name": "noor",
+            "email": "noor@gmail.com",
+            "email_verified_at": null,
+            "account_id": 1,
+            "account_type": "customer",
+            "balance": "4750.00",
+            "created_at": "2024-01-07T09:22:21.000000Z",
+            "updated_at": "2024-01-07T12:22:13.000000Z"
+        },
+        {
+            "id": 2,
+            "name": "American Eagle",
+            "email": "ae@gmail.com",
+            "email_verified_at": null,
+            "account_id": 2,
+            "account_type": "merchant",
+            "balance": "150150.00",
+            "created_at": "2024-01-07T09:24:10.000000Z",
+            "updated_at": "2024-01-07T09:38:31.000000Z"
+        },
+        {
+            "id": 3,
+            "name": "Jumia",
+            "email": "jumia@gmail.com",
+            "email_verified_at": null,
+            "account_id": 3,
+            "account_type": "admin",
+            "balance": "250000.00",
+            "created_at": "2024-01-07T09:32:00.000000Z",
+            "updated_at": "2024-01-07T09:32:00.000000Z"
+        },
+        {
+            "id": 4,
+            "name": "Bosta",
+            "email": "bosta@gmail.com",
+            "email_verified_at": null,
+            "account_id": 4,
+            "account_type": "delivery",
+            "balance": "65100.00",
+            "created_at": "2024-01-07T09:32:54.000000Z",
+            "updated_at": "2024-01-07T12:22:13.000000Z"
+        },
+        {
+            "id": 5,
+            "name": "ahmed",
+            "email": "ahmed@gmail.com",
+            "email_verified_at": null,
+            "account_id": 5,
+            "account_type": "customer",
+            "balance": "8750.00",
+            "created_at": "2024-01-07T13:50:14.000000Z",
+            "updated_at": "2024-01-07T13:50:14.000000Z"
+        }
+    ]
+}
 
-## Learning Laravel
+}
+```
+### Error Response
+1.Code:
+```
+‘404 Not Found’
+```
+2..Content:
+```
+"success": false,
+"users": []
+```
+</details>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+#
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+<details><summary><h2>POST</h2><h3>/users</h3> "Create New User"</summary>
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```
+POST http://localhost:8000/api/users 
+```
+### Required Params : 
+```
+[ 
+            'name'=>'required|string|max:255',
+            'email'=>'required|string|max:255',
+            'password'=>'required|string',
+            'account_id'=>'required|integer|min:1',
+            'account_type'=>'required|string|max:255',
+            'balance'=>'required|numeric'
+];
+```
+### Params : 
+```
+[ 
+            'name'=>'mariam',
+            'email'=>'mariam@gmail.com',
+            'password'=>'1234',
+            'account_id'=>'6',
+            'account_type'=>'customer',
+            'balance'=>'6485'
+];
 
-## Laravel Sponsors
+```
+### Success Response
+1.Code:
+```
+201 OK
+```
+2.Content
+```
+ {
+    "success": true,
+    "message": "user Created successfully",
+    "user": {
+        "name": "mariam",
+        "email": "mariam@gmail.com",
+        "account_id": 6,
+        "account_type": "customer",
+        "balance": 6485,
+        "updated_at": "2024-01-07T13:53:45.000000Z",
+        "created_at": "2024-01-07T13:53:45.000000Z",
+        "id": 6
+    }
+}
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```
+### Error Response
+1.Code:
+```
+‘400 Bad Request’
+```
+2..Content:
+```
+"success": false,
+"message": "cannot create user"
+```
+</details>
 
-### Premium Partners
+#
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+<details><summary><h2>PUT</h2><h3>/users/{id}</h3> "Update an existed User"</summary>
 
-## Contributing
+```
+PUT http://localhost:8000/api/users/{id}
+```
+### Params : 
+```
+Required: 'id = [integer]';
+```
+### Data Params :
+#### Fields to be Updated 
+For Example: Update transaction amount
+#### 
+```
+{
+     "balance":"275.00",
+}
+```
+### Success Response
+1.Code:
+```
+201 OK
+```
+2.Content
+```
+ { 
+    "success": true,
+    "user": {
+        "id": 5,
+        "name": "ahmed",
+        "email": "ahmed@gmail.com",
+        "email_verified_at": null,
+        "account_id": 5,
+        "account_type": "customer",
+        "balance": 7500,
+        "created_at": "2024-01-07T13:50:14.000000Z",
+        "updated_at": "2024-01-07T15:46:59.000000Z"
+    },
+    "message": "User Updated successfully",
+    "updated attributes": {
+        "password": "$2y$12$BUUyvl8hgOC2fZt6Up.0Ie9YDke.OUtMFKaeTwHK90jYEhuTeZNMy",
+        "balance": 7500,
+        "updated_at": "2024-01-07 15:46:59"
+    }
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+}
+```
+### Error Response
+1.Code:
+```
+‘400 Bad Request’
+```
+2..Content:
+```
+"success": false,
+"message": "cannot update user"
+```
+</details>
 
-## Code of Conduct
+#
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+<details><summary><h2>DELETE</h2><h3>/users/{id}</h3> "Delete an existed User"</summary>
 
-## Security Vulnerabilities
+```
+DELETE http://localhost:8000/api/users/{id}
+```
+### URL Params : 
+```
+Required: 'id = [integer]';
+```
+### Success Response
+1.Code:
+```
+201 OK
+```
+2.Content
+```
+ { 
+    "success": true,
+    "message": “user with ID: ‘{id}’ deleted”
+ }
+```
+### Error Response
+1.Code:
+```
+‘404 Not Found’
+```
+2..Content:
+```
+"success": false,
+"message": “user with ID: ‘{id}’ not found”.
+```
+</details>
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+#
 
-## License
+</details>
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#
+
+<details>
+<summary> <h1>Transactions   </h1> This API is for managing and handling financial transactions. </summary>
+
+### Base Url:
+```
+”http://localhost:8000/api”
+```
+
+# 
+
+<details><summary>
+<h2>GET </h2> <h3>/transactions </h3> "Retrieve all transactions"
+</summary>
+
+```
+GET http://localhost:8000/api/transactions    
+```
+### Params : None
+### Success Response
+1.Code:
+```
+201 OK
+```
+2.Content
+```
+{ 
+"success": true,
+"transactions": 
+   [ 
+       { 
+         "id": 1,
+         "user_id": 1,
+         "order_id": 1, 
+         "type": 1,
+         "fromable_account_type": "customer",
+         "fromable_account_id": 1,
+         "toable_account_type": "merchant",
+         "toable_account_id": 2,
+         "amount": "150.00",
+         "balance": "1000.00",
+         "created_at": "2024-01-07T09:38:31.000000Z",
+         "updated_at": "2024-01-07T09:38:31.000000Z"
+       },
+       { 
+         "id": 2, 
+         "user_id": 1,
+         "order_id": 1, 
+         "type": 4, 
+         "fromable_account_type": "customer", 
+         "fromable_account_id": 1,
+         "toable_account_type": "delivery",
+         "toable_account_id": 4,
+         "amount": "50.00", 
+         "balance": "1000.00", 
+         "created_at": "2024-01-07T09:38:54.000000Z",
+         "updated_at": "2024-01-07T09:38:54.000000Z" 
+       } 
+   ] 
+}
+```
+### Error Response
+1.Code:
+```
+‘404 Not Found’
+```
+2..Content:
+```
+"success": false,
+"transactions": []
+```
+</details>
+
+#
+
+<details>
+
+#
+<summary>
+<h2>POST</h2> <h3>/transactions</h3> "Create New Transaction"
+</summary>
+
+```
+POST http://localhost:8000/api/transactions    "Create New Transaction"
+```
+### Params : 
+```
+[ 
+  'user_id' => 'required', 
+  'order_id' => 'required',
+  'type' => 'required', 
+  'fromable_account_type' => 'required|string|max:255', 
+  'fromable_account_id' => 'required|integer|min:1',
+  'toable_account_type' => 'required|string|max:255', 
+  'toable_account_id' => 'required|integer|min:1',
+  'amount' => 'required|numeric', 
+  'balance'=>'required|numeric'
+];
+```
+### Success Response
+1.Code:
+```
+201 OK
+```
+2.Content
+```
+ { 
+    "success": true,
+    "message": "Transaction Created successfully", 
+    "transaction":
+ { 
+    "user_id": 1,
+    "order_id": 1,
+    "type": 4, 
+    "fromable_account_id": 1,
+    "fromable_account_type": "customer", 
+    "toable_account_id": 4, 
+    "toable_account_type": "delivery",
+    "amount": 50,
+    "balance": 1000, 
+    "updated_at": "2024-01-07T12:22:13.000000Z",
+    "created_at": "2024-01-07T12:22:13.000000Z", 
+    "id": 3,
+    "fromable": null,
+    "fromable_account": 
+{
+    "id": 1,
+    "name": "noor",
+    "email": "noor@gmail.com", 
+    "email_verified_at": null,
+    "account_id": 1,
+    "account_type": "customer",
+    "balance": 4750,
+    "created_at": "2024-01-07T09:22:21.000000Z",
+    "updated_at": "2024-01-07T12:22:13.000000Z" 
+},
+    "toable": null,
+    "toable_account":
+ { 
+    "id": 4,
+    "name": "Bosta",
+    "email": "bosta@gmail.com",
+    "email_verified_at": null, 
+    "account_id": 4,
+    "account_type": "delivery",
+    "balance": 65100,
+    "created_at": "2024-01-07T09:32:54.000000Z",
+    "updated_at": "2024-01-07T12:22:13.000000Z"
+      }
+   }
+}
+```
+### Error Response
+1.Code:
+```
+‘400 Bad Request’
+```
+2..Content:
+```
+"success": false,
+"message": "cannot create transaction"
+```
+</details>
+
+#
+
+</details>
+
+#
