@@ -18,10 +18,10 @@ return new class extends Migration
             $table->foreignId('type')->constrained('transactions_types');
             $table->unsignedBigInteger('fromable_account_id');
             $table->string('fromable_account_type');
-            $table->decimal('fromable_account_balance');
+            $table->decimal('fromable_account_balance',8,2)->nullable();
             $table->unsignedBigInteger('toable_account_id');
             $table->string('toable_account_type');
-            $table->decimal('toable_account_balance');
+            $table->decimal('toable_account_balance',8,2)->nullable();
             $table->decimal('amount',8,2);
             $table->timestamps();
         });

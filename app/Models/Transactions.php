@@ -32,7 +32,7 @@ class Transactions extends Model
         //the amount of this transaction
         'amount',
     ];
-    protected $table = 'transaction';
+    protected $table = 'transactions';
 
     //relation between user and transaction that every transaction belong to user
     public function user()
