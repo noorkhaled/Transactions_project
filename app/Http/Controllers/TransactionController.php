@@ -27,10 +27,9 @@ class TransactionController extends Controller
     }
 
     //store function is to create new transaction
-    public function store(TransactionRequest $transactionRequest,Transactions $transactions)
+    public function store(TransactionRequest $transactionRequest)
     {
         DB::beginTransaction();
-
         if (!$data = $transactionRequest->validated()) {
             DB::rollBack();
             return response()->json([
