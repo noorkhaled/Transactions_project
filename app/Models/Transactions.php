@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Transactions extends Model
 {
@@ -60,31 +61,29 @@ class Transactions extends Model
 
     public function updateBalances()
     {
-        $this->load('fromable', 'toable');
+        DB::transaction(function () {
+            $this->load('fromable', 'toable');
+            // Check if the related users exist
+            if ($this->fromable_account && $this->toable_account) {
+                // Update balances in users table
+                $this->fromable_account->balance -= $this->amount;
+                $this->toable_account->balance += $this->amount;
 
-        // Check if the related users exist
-        if ($this->fromable_account && $this->toable_account) {
-            // Update balances in users table
-            $this->fromable_account->balance -= $this->amount;
-            $this->toable_account->balance += $this->amount;
+                // Save changes to the database
+                $this->fromable_account->save();
+                $this->toable_account->save();
 
-            // Save changes to the database
-            $this->fromable_account->save();
-            $this->toable_account->save();
-
-            // Update balances in the transaction table
-            $this->update([
-                'fromable_account_balance' => $this->fromable_account->balance,
-                'toable_account_balance' => $this->toable_account->balance,
-            ]);
-        }
+                // Update balances in the transaction table
+                $this->update([
+                    'fromable_account_balance' => $this->fromable_account->balance,
+                    'toable_account_balance' => $this->toable_account->balance,
+                ]);
+            }
+        });
     }
 
     protected static function boot()
     {
         parent::boot();
-        static::created(function (Transactions $transaction) {
-            $transaction->updateBalances();
-        });
     }
 }

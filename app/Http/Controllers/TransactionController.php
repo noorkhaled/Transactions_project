@@ -6,6 +6,7 @@ use App\Http\Requests\TransactionRequest;
 use App\Models\Transactions;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
@@ -26,21 +27,24 @@ class TransactionController extends Controller
     }
 
     //store function is to create new transaction
-    public function store(TransactionRequest $transactionRequest)
+    public function store(TransactionRequest $transactionRequest,Transactions $transactions)
     {
+        DB::beginTransaction();
+
         if (!$data = $transactionRequest->validated()) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => 'cannot create transaction',
             ]);
         }
-
         $fromableUser = User::where('account_id', $data['fromable_account_id'])->first();
         $toableUser = User::where('account_id', $data['toable_account_id'])->first();
-
         $data['fromable_account_type'] = $fromableUser->account_type;
         $data['toable_account_type'] = $toableUser->account_type;
         $transactions = Transactions::create($data);
+        $transactions->updateBalances();
+        DB::commit();
         return response()->json([
             'success' => true,
             'message' => 'Transaction created successfully',
