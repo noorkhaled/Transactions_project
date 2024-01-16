@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\Orders;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
@@ -16,7 +17,7 @@ class UserTest extends TestCase
                 'name' => 'ali',
                 'email' => 'ali@eg.com',
                 'password' => '1234',
-                'account_id' => 3,
+                'account_id' => 1,
                 'account_type' => 'customer',
                 'balance' => '1650.00'
             ],
@@ -24,8 +25,8 @@ class UserTest extends TestCase
                 'name' => 'kareem',
                 'email' => 'kareem@eg.com',
                 'password' => '1234',
-                'account_id' => 4,
-                'account_type' => 'customer',
+                'account_id' => 2,
+                'account_type' => 'merchant',
                 'balance' => '1750.00'
             ],
             [
@@ -61,11 +62,11 @@ class UserTest extends TestCase
 
         $response->assertStatus(201);
         foreach ($users as $key => $myuser) {
-            $expectedUserWithoutPassword = array_diff_key($myuser, ['password' => '']);
+            $UserWithoutPassword = array_diff_key($myuser, ['password' => '']);
             $response->assertJson([
                 'success' => true,
                 'users' => [
-                    $key => array_merge(['id' => $key + 1], $expectedUserWithoutPassword)
+                    $key => array_merge(['id' => $key + 1], $UserWithoutPassword)
                 ]
             ]);
         }

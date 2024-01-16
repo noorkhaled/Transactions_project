@@ -26,9 +26,9 @@ class Transactions extends Model
         'fromable_account_id',
         //the account_id of transaction`s receiver
         'toable_account_id',
-        ////the account_balance of transaction`s sender
+        //the account_balance of transaction`s sender
         'fromable_account_balance',
-        ////the account_balance of transaction`s receiver
+        //the account_balance of transaction`s receiver
         'toable_account_balance',
         //the amount of this transaction
         'amount',
@@ -59,6 +59,7 @@ class Transactions extends Model
         return $this->morphTo('toable_account', 'toable_account_type', 'toable_account_id');
     }
 
+    //updateBalance function is responsible for updating users` balances in users` table and also in transactions` table after transaction created
     public function updateBalances()
     {
         DB::transaction(function () {
@@ -80,10 +81,5 @@ class Transactions extends Model
                 ]);
             }
         });
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
     }
 }
