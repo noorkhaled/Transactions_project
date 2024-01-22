@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Unit;
+namespace laravel\LaravelTransactionPackage\tests;
 
 use App\Models\Orders;
-use laravel\LaravelTransactionPackage\Models\Transactions;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use laravel\LaravelTransactionPackage\Models\Transactions;
 use Tests\TestCase;
 
 class TransactionTest extends TestCase
