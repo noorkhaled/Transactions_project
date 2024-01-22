@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace laravel\LaravelTransactionPackage\Models;
 
+use App\Models\Orders;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
+
 
 class Transactions extends Model
 {
@@ -60,26 +62,26 @@ class Transactions extends Model
     }
 
     //updateBalance function is responsible for updating users` balances in users` table and also in transactions` table after transaction created
-    public function updateBalances()
-    {
-        DB::transaction(function () {
-            $this->load('fromable', 'toable');
-            // Check if the related users exist
-            if ($this->fromable_account && $this->toable_account) {
-                // Update balances in users table
-                $this->fromable_account->balance -= $this->amount;
-                $this->toable_account->balance += $this->amount;
-
-                // Save changes to the database
-                $this->fromable_account->save();
-                $this->toable_account->save();
-
-                // Update balances in the transaction table
-                $this->update([
-                    'fromable_account_balance' => $this->fromable_account->balance,
-                    'toable_account_balance' => $this->toable_account->balance,
-                ]);
-            }
-        });
-    }
+//    public function updateBalances()
+//    {
+//        DB::transaction(function () {
+//            $this->load('fromable', 'toable');
+//            // Check if the related users exist
+//            if ($this->fromable_account && $this->toable_account) {
+//                // Update balances in users table
+//                $this->fromable_account->balance -= $this->amount;
+//                $this->toable_account->balance += $this->amount;
+//
+//                // Save changes to the database
+//                $this->fromable_account->save();
+//                $this->toable_account->save();
+//
+//                // Update balances in the transaction table
+//                $this->update([
+//                    'fromable_account_balance' => $this->fromable_account->balance,
+//                    'toable_account_balance' => $this->toable_account->balance,
+//                ]);
+//            }
+//        });
+//    }
 }

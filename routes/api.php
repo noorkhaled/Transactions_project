@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use laravel\LaravelTransactionPackage\Http\Controllers\TransactionController;
 
 /*
 |--------------------------------------------------------------------------

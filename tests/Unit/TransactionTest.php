@@ -33,55 +33,18 @@ class TransactionTest extends TestCase
                 'balance' => '1750.00'
             ],
         ];
-        $order = Orders::create();
         foreach ($users as $user) {
             $myuser = User::create($user);
         }
+        $order = Orders::create();
         DB::table('transactions_types')->insert([
             ['name' => 'MerchantFees'],
             ['name' => 'servicesFees'],
             ['name' => 'PaymentTaxes'],
             ['name' => 'DeliveryFees'],
         ]);
-//        $Transactions = [
-//            [
-//                'user_id' => $users[1]['account_id'],
-//                'order_id' => 1,
-//                'type' => '',
-//                'fromable_account_id' => $users[1]['account_id'],
-//                'fromable_account_type' => "customer",
-//                'fromable_account_balance' => 1500,
-//                'toable_account_id' => $users[2]['account_id'],
-//                'toable_account_type' => "merchant",
-//                'toable_account_balance' => 2500,
-//                'amount' => 250
-//            ],
-//            [
-//                'user_id' => 1,
-//                'order_id' => 1,
-//                'type' => 1,
-//                'fromable_account_id' => 1,
-//                'fromable_account_type' => "customer",
-//                'fromable_account_balance' => 1500,
-//                'toable_account_id' => 2,
-//                'toable_account_type' => "merchant",
-//                'toable_account_balance' => 2500,
-//                'amount' => 250
-//            ],
-//            [
-//                'user_id' => 1,
-//                'order_id' => 1,
-//                'type' => 1,
-//                'fromable_account_id' => 1,
-//                'fromable_account_type' => "customer",
-//                'fromable_account_balance' => 1500,
-//                'toable_account_id' => 2,
-//                'toable_account_type' => "merchant",
-//                'toable_account_balance' => 2500,
-//                'amount' => 250
-//            ],
-//        ];
-        $Transactions = Transactions::create([
+
+        Transactions::create([
             'user_id' => $myuser->id,
             'order_id' => $order->id,
             'type' => 1,
@@ -117,4 +80,61 @@ class TransactionTest extends TestCase
         );
     }
 
+    public function test_Store()
+    {
+        $user1 = User::create([
+            'name' => 'ali',
+            'email' => 'ali@eg.com',
+            'password' => '1234',
+            'account_id' => 1,
+            'account_type' => 'customer',
+            'balance' => '1650.00'
+        ]);
+        $user2 = User::create([
+            'name' => 'kareem',
+            'email' => 'kareem@eg.com',
+            'password' => '1234',
+            'account_id' => 2,
+            'account_type' => 'merchant',
+            'balance' => '1750.00'
+        ]);
+        $order = Orders::create();
+        DB::table('transactions_types')->insert([
+            ['name' => 'MerchantFees'],
+            ['name' => 'servicesFees'],
+            ['name' => 'PaymentTaxes'],
+            ['name' => 'DeliveryFees'],
+        ]);
+
+        $requestData = [
+            'user_id' => $user1->id,
+            'order_id' => $order->id,
+            'type' => 1,
+            'fromable_account_id' => $user1->account_id,
+            'toable_account_id' => $user2->account_id,
+            'fromable_account_type' => $user1->account_type,
+            'toable_account_type' => $user2->account_type,
+            'fromable_account_balance' => $user1->balance,
+            'toable_account_balance' => $user2->balance,
+            'amount' => 250
+        ];
+        $response = $this->postJson('http://localhost:8000/api/transactions', $requestData);
+        $response->assertStatus(201)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Transaction created successfully',
+            ]);
+        $this->assertDatabaseHas('transactions', [
+            'user_id' => $user1->id,
+            'order_id' => $order->id,
+            'type' => 1,
+            'fromable_account_id' => $user1->account_id,
+            'toable_account_id' => $user2->account_id,
+            'fromable_account_type' => $user1->account_type,
+            'toable_account_type' => $user2->account_type,
+            'fromable_account_balance' => $user1->balance - $requestData['amount'],
+            'toable_account_balance' => $user2->balance + $requestData['amount'],
+            'amount' => 250
+        ]);
+    }
 }
