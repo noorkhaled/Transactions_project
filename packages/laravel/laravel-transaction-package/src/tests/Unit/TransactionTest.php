@@ -1,6 +1,6 @@
 <?php
 
-namespace laravel\LaravelTransactionPackage\tests;
+namespace laravel\LaravelTransactionPackage\tests\Unit;
 
 use App\Models\Orders;
 use App\Models\User;
