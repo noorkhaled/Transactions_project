@@ -1,7 +1,9 @@
 <?php
+
 namespace laravel\LaravelTransactionPackage\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use laravel\LaravelTransactionPackage\Http\Requests\TransactionRequest;
 use laravel\LaravelTransactionPackage\Models\Transactions;
 use App\Models\User;
@@ -30,55 +32,14 @@ class TransactionController extends Controller
             'transactions' => $transactions
         ], 201);
     }
-
-    //store function is to create new transaction
-//    public function store(TransactionRequest $transactionRequest)
-//    {
-//        // Step 1: Begin a new database transaction
-//        // DB::beginTransaction();
-//
-//        // Step 2: Validate the transaction request data
-//        if (!$data = $transactionRequest->validated()) {
-//            // Step 3: Validation failed, rollback the transaction
-//            DB::rollBack();
-//
-//            // Step 4: Return a response indicating validation failure
-//            return response()->json([
-//                'success' => false,
-//                'message' => 'cannot create transaction',
-//            ]);
-//        }
-//
-//        // Step 5: Fetch user data for fromable and toable accounts
-//        $fromableUser = User::where('account_id', $data['fromable_account_id'])->first();
-//        $toableUser = User::where('account_id', $data['toable_account_id'])->first();
-//
-//        // Step 6: Update user data in transaction table with account types in users table
-//        $data['fromable_account_type'] = $fromableUser->account_type;
-//        $data['toable_account_type'] = $toableUser->account_type;
-//
-//        // Step 7: Create a new transaction record in the database
-//        $transaction = Transactions::create($data);
-//
-//        // Step 8: Update balances using the method in the Transaction model
-//        $transaction->updateBalances();
-//
-//        // Step 9: Commit the database transaction
-//        //DB::commit();
-//
-//        // Step 10: Return a response indicating success with the created transaction
-//        return response()->json([
-//            'success' => true,
-//            'message' => 'Transaction created successfully',
-//            'transaction' => $transaction
-//        ], 201);
-//    }
     public function store(TransactionRequest $transactionRequest)
     {
         DB::beginTransaction();
+
         // Step 1: Validate the transaction request data
         if (!$data = $transactionRequest->validated()) {
             DB::rollBack();
+
             // Step 2: Return a response indicating validation failure
             return response()->json([
                 'success' => false,
@@ -89,39 +50,75 @@ class TransactionController extends Controller
         // Step 3: Fetch user data for fromable and toable accounts
         $fromableUser = User::where('account_id', $data['fromable_account_id'])->first();
         $toableUser = User::where('account_id', $data['toable_account_id'])->first();
-        DB::commit();
-        // Step 4: Update user balances and create a new transaction record
-        DB::transaction(function () use ($fromableUser, $toableUser, $data) {
-            // Update balances in users table
-            $fromableUser->balance -= $data['amount'];
-            $toableUser->balance += $data['amount'];
 
-            // Save changes to the database
-            $fromableUser->save();
-            $toableUser->save();
-            DB::commit();
-            // Create a new transaction record in the database
-            Transactions::create([
-                'user_id' => $data['user_id'],
-                'order_id' => $data['order_id'],
-                'type' => $data['type'],
-                'fromable_account_type' => $fromableUser->account_type,
-                'toable_account_type' => $toableUser->account_type,
-                'fromable_account_id' => $data['fromable_account_id'],
-                'toable_account_id' => $data['toable_account_id'],
-                'fromable_account_balance' => $fromableUser->balance,
-                'toable_account_balance' => $toableUser->balance,
-                'amount' => $data['amount'],
+        // Step 4: Check if fromable_account_id and toable_account_id are not equal
+        if ($data['fromable_account_id'] === $data['toable_account_id']) {
+            DB::rollBack();
+
+            // Return a response indicating failure due to equal IDs
+            return response()->json([
+                'success' => false,
+                'message' => 'fromable_account_id and toable_account_id must be different',
             ]);
-        });
-        DB::commit();
-        // Step 5: Return a response indicating success
-        return response()->json([
-            'success' => true,
-            'message' => 'Transaction created successfully',
-        ], 201);
-    }
+        }
 
+        // Step 5: Check if fromable account balance is greater than or equal to the transaction amount
+        if ($fromableUser->balance < $data['amount']) {
+            DB::rollBack();
+
+            // Return a response indicating failure due to insufficient balance
+            return response()->json([
+                'success' => false,
+                'message' => 'Insufficient balance in fromable account',
+            ]);
+        }
+
+        try {
+            // Step 6: Update user balances and create a new transaction record
+            DB::transaction(function () use ($fromableUser, $toableUser, $data) {
+                // Update balances in users table
+                $fromableUser->balance -= $data['amount'];
+                $toableUser->balance += $data['amount'];
+
+                // Save changes to the database
+                $fromableUser->save();
+                $toableUser->save();
+
+                // Create a new transaction record in the database
+                Transactions::create([
+                    'user_id' => $data['user_id'],
+                    'order_id' => $data['order_id'],
+                    'type' => $data['type'],
+                    'fromable_account_type' => $fromableUser->account_type,
+                    'toable_account_type' => $toableUser->account_type,
+                    'fromable_account_id' => $data['fromable_account_id'],
+                    'toable_account_id' => $data['toable_account_id'],
+                    'fromable_account_balance' => $fromableUser->balance,
+                    'toable_account_balance' => $toableUser->balance,
+                    'amount' => $data['amount'],
+                ]);
+            });
+
+            // Step 7: Commit the transaction
+            DB::commit();
+
+            // Step 8: Return a response indicating success
+            return response()->json([
+                'success' => true,
+                'message' => 'Transaction created successfully',
+            ], 201);
+        } catch (Exception $e) {
+            // Handle any exceptions and roll back the transaction
+            DB::rollBack();
+
+            // Return a response indicating failure
+            return response()->json([
+                'success' => false,
+                'message' => 'Error creating transaction',
+                'error' => $e
+            ]);
+        }
+    }
     //show function is used to retrieve a specific transaction by it`s ID
     public function show($id)
     {

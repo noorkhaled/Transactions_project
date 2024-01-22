@@ -16,8 +16,9 @@ class AppServiceProvider extends ServiceProvider
         Relation::morphMap([
             'customer' => User::class,
             'merchant' => User::class,
-            'delivery' => User::class,
-            'admin'    => User::class,
+            'employee' => User::class,
+            'admin' => User::class,
+            'super_admin' => User::class,
         ]);
     }
 
