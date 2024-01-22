@@ -1,7 +1,6 @@
 <?php
 
 namespace laravel\LaravelTransactionPackage;
-use laravel\LaravelTransactionPackage\useIlluminate\Database;
 use laravel\LaravelTransactionPackage\Http\Controllers\TransactionController;
 use laravel\LaravelTransactionPackage\Models\Transactions;
 use Illuminate\Support\ServiceProvider;

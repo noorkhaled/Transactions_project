@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Orders;
-use App\Models\Transactions;
+use laravel\LaravelTransactionPackage\Models\Transactions;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
