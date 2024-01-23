@@ -23,7 +23,7 @@ class TransactionController extends Controller
             // Step 3: No transactions found, return a response indicating failure
             return response()->json([
                 'success' => false,
-                'message' => "No transactions found"
+                'message' => trans('messages.no_transactions_found')
             ]);
         }
 
@@ -211,7 +211,7 @@ class TransactionController extends Controller
             // Step 3: Transaction not found, return a response indicating failure
             return response()->json([
                 'success' => false,
-                'message' => "Cannot locate Transaction with ID: '$id'"
+                'message' => trans('messages.cannot_locate_Transaction_ID')."$id"
             ]);
         }
 
