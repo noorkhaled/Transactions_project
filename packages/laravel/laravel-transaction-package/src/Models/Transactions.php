@@ -14,8 +14,6 @@ class Transactions extends Model
 
     //Here are the fillabel attributes that required when you want to create a new transaction
     protected $fillable = [
-        //the id of user who will create this transaction
-        'user_id',
         //the order_id that this transaction will belong to
         'order_id',
         //the type of the transaction
@@ -60,28 +58,4 @@ class Transactions extends Model
     {
         return $this->morphTo('toable_account', 'toable_account_type', 'toable_account_id');
     }
-
-    //updateBalance function is responsible for updating users` balances in users` table and also in transactions` table after transaction created
-//    public function updateBalances()
-//    {
-//        DB::transaction(function () {
-//            $this->load('fromable', 'toable');
-//            // Check if the related users exist
-//            if ($this->fromable_account && $this->toable_account) {
-//                // Update balances in users table
-//                $this->fromable_account->balance -= $this->amount;
-//                $this->toable_account->balance += $this->amount;
-//
-//                // Save changes to the database
-//                $this->fromable_account->save();
-//                $this->toable_account->save();
-//
-//                // Update balances in the transaction table
-//                $this->update([
-//                    'fromable_account_balance' => $this->fromable_account->balance,
-//                    'toable_account_balance' => $this->toable_account->balance,
-//                ]);
-//            }
-//        });
-//    }
 }

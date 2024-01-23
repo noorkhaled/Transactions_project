@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users','id');
             $table->foreignId('order_id')->constrained('orders','id');
             $table->foreignId('type')->constrained('transactions_types');
             $table->unsignedBigInteger('fromable_account_id');

@@ -188,7 +188,6 @@ class TransactionController extends Controller
 
             // Create a new transaction record in the database
             Transactions::create([
-                'user_id' => $data['user_id'],
                 'order_id' => $data['order_id'],
                 'type' => $data['type'],
                 'fromable_account_type' => $fromableUser->account_type,
