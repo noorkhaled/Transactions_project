@@ -4,7 +4,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use laravel\LaravelTransactionPackage\Http\Controllers\TransactionController;
+use Laravel\LaravelTransactionPackage\Http\Controllers\api\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +24,6 @@ Route::apiResource('users', UserController::class);
 Route::delete('users/{user}', [UserController::class, 'delete']);
 Route::put('users/{user}', [UserController::class, 'update']);
 
-Route::apiResource('transactions', TransactionController::class);
+//Route::apiResource('transactions', TransactionController::class);
 
 Route::apiResource('orders', OrderController::class);

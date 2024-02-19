@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 class UserController extends Controller
 {
     //Index function is used here to retrieve all users in DB
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
         $users = User::all();
         if (!$users) {
@@ -25,7 +26,7 @@ class UserController extends Controller
     }
 
     //store function is to create new user
-    public function store(Request $request, UserRequest $usersRequest)
+    public function store(Request $request, UserRequest $usersRequest): \Illuminate\Http\JsonResponse
     {
         if (!$request->validate($usersRequest->rules())) {
             return response()->json([
@@ -33,16 +34,28 @@ class UserController extends Controller
                 'message' => 'cannot create user',
             ]);
         }
-        $user = User::create($request->all());
+
+        $config = Config::get('transactions.accountTypes.user');
+        $user1 = $config['model'];
+        $date = $usersRequest->validated();
+//        $user = User::create($request->all());
+        User::create([
+            'name'=>$date['name'],
+            'email'=>$date['email'],
+            'password'=>$date['password'],
+            'account_id'=>$date['account_id'],
+            'account_type'=>$user1,
+            'balance'=>$date['balance']
+        ]);
         return response()->json([
             'success' => true,
             'message' => 'user Created successfully',
-            'user' => $user
+//            'user' => $user
         ], 201);
     }
 
     //show function is used to retrieve a specific user by it`s ID
-    public function show($userId)
+    public function show($userId): \Illuminate\Http\JsonResponse
     {
         $user = User::find($userId);
         if (!$user) {
@@ -58,7 +71,7 @@ class UserController extends Controller
     }
 
     //update function is to first retrieve a specific user by ID like show give it the attributes i want to update
-    public function update(Request $request, User $user, UserRequest $usersRequest)
+    public function update(Request $request, User $user, UserRequest $usersRequest): \Illuminate\Http\JsonResponse
     {
         $originalAttributes = $user->getOriginal();
         if (!$request->validate($usersRequest->rules())) {
@@ -81,7 +94,7 @@ class UserController extends Controller
     }
 
     //delete function is used to delete a specific user with it`s ID
-    public function delete($id)
+    public function delete($id): \Illuminate\Http\JsonResponse
     {
         $user = User::find($id);
         if (!$user) {

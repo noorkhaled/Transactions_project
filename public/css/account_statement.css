@@ -1,0 +1,61 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+}
+h1{
+    text-align: center;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+}
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    margin:  25px 130px 0 auto;
+}
+.card h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 15px;
+    font-size: medium;
+}
+.card:hover{
+    background-color: #f5f5f5;
+}
+table {
+    width: 85%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    box-shadow: 0 20px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+.sent{
+    color: red;
+}
+.received{
+    color: green;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #333;
+    color: #fff;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}

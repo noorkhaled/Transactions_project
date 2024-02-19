@@ -18,7 +18,6 @@ class UserRequest extends FormRequest
             'email' => 'required|string|max:255',
             'password' => 'required|string',
             'account_id' => 'required|integer|min:1',
-            'account_type' => 'required|string|max:255',
             'balance' => 'required|numeric'
         ];
     }

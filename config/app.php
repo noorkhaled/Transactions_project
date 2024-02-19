@@ -168,7 +168,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        laravel\LaravelTransactionPackage\LaravelTransactionPackageServiceProvider::class
+        Laravel\LaravelTransactionPackage\LaravelTransactionPackageServiceProvider::class
     ])->toArray(),
 
     /*
